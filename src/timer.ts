@@ -14,21 +14,36 @@ interface TimerNodeProperties extends NodeProperties {
 
 module.exports = function (RED: Red) {
     class TimerNode extends Node {
-        private timerRunning: boolean;
-        private timeoutID: NodeJS.Timeout;
-        private enabled: boolean;
-        private outputOnValue: any;
-        private outputOffValue: any;
 
         constructor(config: TimerNodeProperties) {
             super(RED);
-            this.createNode(config);
-            this.outputOff();
+            let timerRunning: boolean;
+            let timeoutID: NodeJS.Timeout;
+            let enabled: boolean = true;
             const trigger = RED.util.evaluateNodeProperty(config.trigger, config.triggerType, this);
-            this.outputOnValue = RED.util.evaluateNodeProperty(config.outputOn, config.outputOnType, this);
-            this.outputOffValue = RED.util.evaluateNodeProperty(config.outputOff, config.outputOffType, this);
-            this.enabled = true;
-            const obj = this;
+            const outputOnValue = RED.util.evaluateNodeProperty(config.outputOn, config.outputOnType, this);
+            const outputOffValue = RED.util.evaluateNodeProperty(config.outputOff, config.outputOffType, this);
+
+            const outputOn = () => {
+                timerRunning = true;
+                this.status({ fill: "green", shape: "dot", text: "on" });
+                this.send({ payload: outputOnValue });
+            };
+            const outputOff = () => {
+                timerRunning = false;
+                this.status({ fill: "green", shape: "ring", text: "off" });
+                this.send({ payload: outputOffValue });
+            };
+            const enable = () => {
+                enabled = true;
+                this.status({ fill: "green", shape: "ring", text: "off" });
+            };
+            const disable = () => {
+                enabled = false;
+                this.status({ fill: "grey", shape: "ring", text: "disabled" });
+            };
+            this.createNode(config);
+            outputOff();
 
             this.on("input", function (msg: any) {
                 if (msg.payload && msg.payload.command) {
@@ -49,46 +64,18 @@ module.exports = function (RED: Red) {
                     }
                 } else {
                     if (msg.payload === trigger) {
-                        if (obj.enabled) {
-                            if (obj.timerRunning) {
+                        if (enabled) {
+                            if (timerRunning) {
                                 // reset timer
-                                clearTimeout(obj.timeoutID);
+                                clearTimeout(timeoutID);
                             } else {
-                                this.outputOn();
+                                outputOn();
                             }
-                            obj.timeoutID = setTimeout(this.outputOff, config.timeout);
+                            timeoutID = setTimeout(outputOff, config.timeout);
                         }
                     }
                 }
             });
-        }
-
-        outputOn = () => {
-            this.timerRunning = true;
-            this.status({ fill: "green", shape: "dot", text: "on" });
-            this.send({ payload: this.outputOnValue });
-        }
-        outputOff = () => {
-            this.timerRunning = false;
-            this.status({ fill: "green", shape: "ring", text: "off" });
-            this.send({ payload: this.outputOffValue });
-        }
-        enable = () => {
-            this.enabled = true;
-            this.status({ fill: "green", shape: "ring", text: "off" });
-        }
-        disable = () => {
-            this.enabled = false;
-            this.status({ fill: "grey", shape: "ring", text: "disabled" });
-        }
-        forceOn = () => {
-
-        }
-        forceOff = () => {
-
-        }
-        reset = () => {
-
         }
     }
     TimerNode.registerType(RED, "timer");
