@@ -25,18 +25,24 @@ module.exports = function (RED: Red) {
             const outputOffValue = RED.util.evaluateNodeProperty(config.outputOff, config.outputOffType, this);
 
             const outputOn = () => {
+                this.debug(`outputOn: ${config.name}`);
                 timerRunning = true;
                 this.status({ fill: "green", shape: "dot", text: "on" });
                 this.send({ payload: outputOnValue });
             };
             const outputOff = () => {
+                this.debug(`outputOff: ${config.name}`);
                 timerRunning = false;
                 this.status({ fill: "green", shape: "ring", text: "off" });
                 this.send({ payload: outputOffValue });
             };
             const enable = () => {
                 enabled = true;
-                this.status({ fill: "green", shape: "ring", text: "off" });
+                if (timerRunning) {
+                    this.status({ fill: "green", shape: "dot", text: "on" });
+                } else {
+                    this.status({ fill: "green", shape: "ring", text: "off" });
+                }
             };
             const disable = () => {
                 enabled = false;
@@ -50,10 +56,10 @@ module.exports = function (RED: Red) {
 
                     switch (msg.payload.command) {
                         case "ENABLE":
-                            this.enable();
+                            enable();
                             break;
                         case "DISABLE":
-                            this.disable();
+                            disable();
                             break;
                         case "FORCEON":
                             break;
