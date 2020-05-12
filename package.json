@@ -29,6 +29,7 @@
     "@types/shelljs": "^0.8.7",
     "concurrently": "^5.2.0",
     "jest": "^26.0.1",
+    "node-red": "^1.0.6",
     "node-red-contrib-typescript-node": "^0.1.0",
     "prettier": "^2.0.5",
     "shelljs": "^0.8.4",
@@ -36,7 +37,5 @@
     "tslint": "^6.1.2",
     "typescript": "^3.8.3"
   },
-  "dependencies": {
-    "node-red": "^1.0.6"
-  }
+  "dependencies": {}
 }
