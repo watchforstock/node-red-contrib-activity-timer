@@ -2,8 +2,10 @@ import { Red, NodeProperties } from "node-red";
 import { Node } from "node-red-contrib-typescript-node";
 
 interface TimerNodeProperties extends NodeProperties {
-    onValue: any;
-    offValue: any;
+    outputOn: any;
+    outputOnType: any;
+    outputOff: any;
+    outputOffType: any;
     triggerValue: any;
     trigger: any;
     triggerType: any;
@@ -15,13 +17,18 @@ module.exports = function (RED: Red) {
         private timerRunning: boolean;
         private timeoutID: NodeJS.Timeout;
         private enabled: boolean;
+        private outputOnValue: any;
+        private outputOffValue: any;
 
         constructor(config: TimerNodeProperties) {
             super(RED);
             this.createNode(config);
             this.outputOff();
             const trigger = RED.util.evaluateNodeProperty(config.trigger, config.triggerType, this);
+            this.outputOnValue = RED.util.evaluateNodeProperty(config.outputOn, config.outputOnType, this);
+            this.outputOffValue = RED.util.evaluateNodeProperty(config.outputOff, config.outputOffType, this);
             this.enabled = true;
+            const obj = this;
 
             this.on("input", function (msg: any) {
                 if (msg.payload && msg.payload.command) {
@@ -42,14 +49,14 @@ module.exports = function (RED: Red) {
                     }
                 } else {
                     if (msg.payload === trigger) {
-                        if (this.enabled) {
-                            if (this.timerRunning) {
+                        if (obj.enabled) {
+                            if (obj.timerRunning) {
                                 // reset timer
-                                clearTimeout(this.timeoutID);
+                                clearTimeout(obj.timeoutID);
                             } else {
                                 this.outputOn();
                             }
-                            this.timeoutID = setTimeout(this.outputOff, config.timeout);
+                            obj.timeoutID = setTimeout(this.outputOff, config.timeout);
                         }
                     }
                 }
@@ -59,12 +66,12 @@ module.exports = function (RED: Red) {
         outputOn = () => {
             this.timerRunning = true;
             this.status({ fill: "green", shape: "dot", text: "on" });
-            this.send({ payload: "on" });
+            this.send({ payload: this.outputOnValue });
         }
         outputOff = () => {
             this.timerRunning = false;
             this.status({ fill: "green", shape: "ring", text: "off" });
-            this.send({ payload: "off" });
+            this.send({ payload: this.outputOffValue });
         }
         enable = () => {
             this.enabled = true;

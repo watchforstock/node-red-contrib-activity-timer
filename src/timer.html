@@ -12,6 +12,22 @@
             },
             triggerType: {
                 value: 'num'
+            },
+            outputOn: {
+                value: 1,
+                required: true,
+                validate: RED.validators.typedInput('outputOnType')
+            },
+            outputOnType: {
+                value: 'num'
+            },
+            outputOff: {
+                value: 0,
+                required: true,
+                validate: RED.validators.typedInput('outputOffType')
+            },
+            outputOffType: {
+                value: 'num'
             }
         },
         inputs: 1,
@@ -37,6 +53,21 @@
         <input type="hidden" id="node-input-triggerType">
       </div>
     <div class="form-row">
+        <label for="node-input-outputOn">"On" value to emit</label>
+        <input type="text" id="node-input-outputOn" style="width:70%">
+        <input type="hidden" id="node-input-outputOnType">
+      </div>
+    <div class="form-row">
+        <label for="node-input-outputOff">"Off" value to emit</label>
+        <input type="text" id="node-input-outputOff" style="width:70%">
+        <input type="hidden" id="node-input-outputOffType">
+      </div>
+    <div class="form-row">
+        <label for="node-input-trigger">Trigger value</label>
+        <input type="text" id="node-input-trigger" style="width:70%">
+        <input type="hidden" id="node-input-triggerType">
+      </div>
+    <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
@@ -47,5 +78,5 @@
 </script>
 
 <script type="text/html" data-help-name="timer">
-    <p>A simple node that converts the message payloads into all timer characters</p>
+    <p>A simple timer node that allows for activity like a security light which should stay on for a period after last detected activity</p>
 </script>
