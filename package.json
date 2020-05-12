@@ -1,0 +1,40 @@
+{
+  "name": "node-red-contrib-activity-timer",
+  "version": "0.0.1",
+  "description": "Provides an activity timer for Node Red (allowing security-light-like functionality)",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run watch",
+    "build": "npm run build-ts && npm run tslint && npm run copy-static-assets",
+    "watch-node": "nodemon --watch dist/ --exec \"node-red\"",
+    "watch": "concurrently --kill-others-on-fail -p \"[{name}]\" -n \"Assets,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run copy-static-assets\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "test": "jest --forceExit --verbose -- --watchAll",
+    "coverage": "jest --forceExit --coverage --verbose",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "copy-static-assets": "ts-node copyStaticAssets.ts"
+  },
+  "author": "watchforstock",
+  "license": "ISC",
+  "node-red": {
+    "nodes": {
+      "timer": "dist/timer.js"
+    }
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.5",
+    "@types/node-red": "^0.20.1",
+    "@types/shelljs": "^0.8.7",
+    "concurrently": "^5.2.0",
+    "jest": "^26.0.1",
+    "node-red-contrib-typescript-node": "^0.1.0",
+    "prettier": "^2.0.5",
+    "shelljs": "^0.8.4",
+    "ts-node": "^8.10.1",
+    "tslint": "^6.1.2",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {}
+}
