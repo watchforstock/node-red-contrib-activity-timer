@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-activity-timer",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Provides an activity timer for Node Red (allowing security-light-like functionality)",
   "main": "index.js",
   "scripts": {
