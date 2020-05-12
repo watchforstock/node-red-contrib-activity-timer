@@ -1,0 +1,82 @@
+<script type="text/javascript">
+    RED.nodes.registerType('timer', {
+        category: 'function',
+        color: '#a6bbcf',
+        defaults: {
+            name: { value: "" },
+            timeout: { value: 2000 },
+            trigger: {
+                value: 1,
+                required: true,
+                validate: RED.validators.typedInput('triggerType')
+            },
+            triggerType: {
+                value: 'num'
+            },
+            outputOn: {
+                value: 1,
+                required: true,
+                validate: RED.validators.typedInput('outputOnType')
+            },
+            outputOnType: {
+                value: 'num'
+            },
+            outputOff: {
+                value: 0,
+                required: true,
+                validate: RED.validators.typedInput('outputOffType')
+            },
+            outputOffType: {
+                value: 'num'
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-clock-o",
+        label: function () {
+            return this.name || "timer";
+        },
+        oneditprepare: function () {
+            $('#node-input-trigger').typedInput({
+                default: 'num',
+                typeField: $("#node-input-triggerType"),
+                types: ['bool', 'str', 'num']
+            });
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="timer">
+    <div class="form-row">
+        <label for="node-input-trigger">Trigger value</label>
+        <input type="text" id="node-input-trigger" style="width:70%">
+        <input type="hidden" id="node-input-triggerType">
+      </div>
+    <div class="form-row">
+        <label for="node-input-outputOn">"On" value to emit</label>
+        <input type="text" id="node-input-outputOn" style="width:70%">
+        <input type="hidden" id="node-input-outputOnType">
+      </div>
+    <div class="form-row">
+        <label for="node-input-outputOff">"Off" value to emit</label>
+        <input type="text" id="node-input-outputOff" style="width:70%">
+        <input type="hidden" id="node-input-outputOffType">
+      </div>
+    <div class="form-row">
+        <label for="node-input-trigger">Trigger value</label>
+        <input type="text" id="node-input-trigger" style="width:70%">
+        <input type="hidden" id="node-input-triggerType">
+      </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-timeout"><i class="icon-tag"></i> On time (ms)</label>
+        <input type="text" id="node-input-timeout">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="timer">
+    <p>A simple timer node that allows for activity like a security light which should stay on for a period after last detected activity</p>
+</script>
